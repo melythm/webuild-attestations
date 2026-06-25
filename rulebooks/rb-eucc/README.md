@@ -15,6 +15,10 @@
      <!-- Usage help: (Name LastName, Affiliation) -->
     * [celiacouson](https://github.com/celiacouson)
 
+* Reviewer(s)
+     <!-- Usage help: (Name LastName, Affiliation) -->
+    * Ricky Lamberty, [Robert Bosch GmbH](https://www.bosch.com/)
+    * 
 *Provide versioning information about the Rulebook in the following form:*
 
 | Version          | Date               | Description                                      |
@@ -164,7 +168,7 @@ The following table combines all attestation attributes for the EUCC (mandatory,
 | legal_person_name | Official current legal person name as registered in the business register. | M | string |
 | legal_person_id | Unique ID for the legal person in the EUID structure. | M | string |
 | legal_form_type | Legal form of the company. | M | string |
-| registration_member_state | The member state where the company is registered (Alpha-2 country code). | M | string |
+| registration_member_state | The member state where the company is registered (Alpha-3 country code). | M | string |
 | registered_address | The official address of the company as registered by public authority. See [section 2.5](#25-address) | M | object |
 | registration_date | Date of company registration. | M | string (date) |
 | legal_person_status | Status of the company as defined in national law. | M | string |
@@ -195,7 +199,7 @@ Values:
 
 **registration_member_state**
 
-ISO 3166-1 alpha-2 country codes
+ISO 3166-1 alpha-3 country codes
 
 **signatory_rule**
 
@@ -208,7 +212,7 @@ Values:
 
 ### 2.3 Integrity rules
 
-- registration_member_state MUST be a valid ISO 3166-1 alpha-2 code.
+- registration_member_state MUST be a valid ISO 3166-1 alpha-3 code.
 - registration_date MUST be equal to or earlier than the issuance date of the attestation.
 - legal_person_id MUST follow the EUID structure.
 - At least one legal_representative MUST be present.
@@ -233,7 +237,7 @@ If a Legal Person is representative of a legal person, the following attributes 
 
 | **Data Identifier** | **Definition** | **Optionality** | **Encoding format** |
 |---|---|---|---|
-| name | Details about the legal person representing the company. | M | string |
+| legal_person_name | Details about the legal person representing the company. | M | string |
 | id | Unique ID for the legal person in the EUID structure. | M | string |
 | legal_form_type | Legal form of the legal person representing the company. | M | string |
 | signatory_rule | Information on whether the representative can engage the company alone or jointly. | M | string |
@@ -262,8 +266,8 @@ There is currently no open standard for addresses. As such, the definitions from
 | **Data Identifier**  | **Definition**                                                                                                                                                                                           |
 |----------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | expiry_date          | Date (and if possible time) when the attestation will expire. Does not need to be an atribute and can be covered by credentialformat metadata, such as for example the "exp" field on the sd-jwt format. |
-| issuing_authority    | Name of the administrative authority that issued the eucc, or the ISO 3166 alpha-2 country code of the respective Member State if there is no separate authority entitled to issue the EUCC.             |
-| issuing_country      | Alpha-2 country code, as specified in ISO 3166-1, of the country or territory of the provider of the person identification data.                                                                         |
+| issuing_authority    | Name of the administrative authority that issued the eucc, or the ISO 3166 alpha-3 country code of the respective Member State if there is no separate authority entitled to issue the EUCC.             |
+| issuing_country      | Alpha-3 country code, as specified in ISO 3166-1, of the country or territory of the provider of the person identification data.                                                                         |
 
 ### 2.7 Conditional metadata 
 
@@ -297,11 +301,11 @@ The . notation is used to indicate the nesting of attributes.
 | attestation_legal_category                         | attestation_legal_category                        | string              | One of EAA, Pub-EAA, QEAA as defined by eIDAS 2                            |
 | issuing_authority                                  | iss                                               | string              | RFC 7519 / Section 2.6                                                     |
 | expiry_date                                        | exp                                               | number              | RFC 7519 / Section 2.6 (Unix timestamp)                                    |
-| issuing_country                                    | issuing_country                                   | string              | ISO 3166-1 alpha-2                                                         |
+| issuing_country                                    | issuing_country                                   | string              | ISO 3166-1 alpha-3                                                         |
 | legal_person_name                                  | legal_person_name                                 | string              | Official current legal person name as registered in the business register. |
 | legal_person_id                                    | legal_person_id                                   | string              | EUID                                                                       |
 | legal_form_type                                    | legal_form_type                                   | string              | Legal form of the company.                                                 |
-| registration_member_state                          | registration_member_state                         | string              | The member state where the company is registered (Alpha-2 country code).   |
+| registration_member_state                          | registration_member_state                         | string              | The member state where the company is registered (Alpha-3 country code).   |
 | registration_date                                  | registration_date                                 | string              | ISO 8601 (YYYY-MM-DD)                                                      |
 | legal_person_status                                | legal_person_status                               | string              |                                                                            |
 | legal_person_activity                              | legal_person_activity                             | object              | The NACE code describing the main activity                                 |
