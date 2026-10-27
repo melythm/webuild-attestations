@@ -282,16 +282,16 @@
            "</thead><tbody>" + rows + "</tbody></table>";
   }
 
-  function openDetail(rb) {
+  function renderSummary(rb) {
     var body = $("detailBody");
     var fmts = (rb.formats || []).filter(function (f) {
       return rb.encodings && rb.encodings[f];
     });
     var fmt = fmts.length ? (fmts.indexOf(detailFmt) !== -1 ? detailFmt : fmts[0]) : "";
 
-    function block(title, inner, tip) {
-      return '<section class="detail-block"><h3>' + esc(title) + help(tip) + "</h3>" +
-             inner + "</section>";
+    function block(title, inner, tip, lean) {
+      return '<section class="detail-block' + (lean ? " lean" : "") + '"><h3>' +
+             esc(title) + help(tip) + "</h3>" + inner + "</section>";
     }
 
     var picker = "";
@@ -313,12 +313,12 @@
         (rb.categoryDeclared
           ? block("Category as declared", "<p>" + esc(rb.categoryDeclared) + "</p>",
                   "The Category line as written at the top of the rulebook, before it " +
-                  "is matched to the six known categories.") : "") +
+                  "is matched to the six known categories.", true) : "") +
         (rb.vct
           ? block("Credential type",
                   "<p>" + copyable(rb.vct, "<code>" + esc(rb.vct) + "</code>") + "</p>",
                   "The vct value that identifies this attestation type to a wallet " +
-                  "or a relying party.") : "") +
+                  "or a relying party.", true) : "") +
         (rb.schemas.length
           ? block("Schema artefacts", "<ul>" + rb.schemas.map(function (s) {
               return '<li><a href="' + fileUrl(s.path) + '" target="_blank" rel="noopener"><code>' +
@@ -348,9 +348,200 @@
       });
     }
 
-    var open = $("openRulebook");
-    if (open) { open.href = fileUrl(rb.path); }
+    topButtons(rb, "summary");
+    body.scrollTop = 0;
+  }
 
+  /* --------------------------------------------- reading inside the panel */
+  /* A rulebook is far too long to scroll in a side panel, so the panel reads
+     it a chapter at a time: a bar naming the chapter, a list to jump with and
+     a step either way. */
+  var reader = { rb: null, mode: "summary", cache: {}, at: 0, chapters: [], i: 0 };
+
+  function topButtons(rb, mode) {
+    var read = $("openRulebook"), back = $("backToSummary"), page = $("openPage");
+    var source = $("openSource");
+    if (read) {
+      read.href = rb.page || fileUrl(rb.path);
+      read.hidden = mode === "reading";
+    }
+    if (back) { back.hidden = mode !== "reading"; }
+    if (page) {
+      page.href = rb.page || fileUrl(rb.path);
+      page.hidden = mode !== "reading";
+    }
+    if (source) { source.href = fileUrl(rb.path); }
+    $("detail").classList.toggle("reading", mode === "reading");
+    reader.mode = mode;
+  }
+
+  function splitChapters(article) {
+    var chapters = [], front = document.createElement("div"), current = null;
+    Array.prototype.forEach.call(article.childNodes, function (node) {
+      if (node.nodeName === "H2") {
+        current = { id: node.id, title: node.textContent, el: document.createElement("div") };
+        chapters.push(current);
+        return;
+      }
+      (current ? current.el : front).appendChild(node.cloneNode(true));
+    });
+    return {
+      front: front.innerHTML,
+      chapters: chapters.map(function (c) {
+        return { id: c.id, title: c.title, html: c.el.innerHTML };
+      }),
+    };
+  }
+
+  function fetchRulebook(rb) {
+    if (reader.cache[rb.slug]) { return Promise.resolve(reader.cache[rb.slug]); }
+    return fetch(rb.page).then(function (r) {
+      if (!r.ok) throw new Error(r.status);
+      return r.text();
+    }).then(function (html) {
+      var doc = new DOMParser().parseFromString(html, "text/html");
+      var article = doc.querySelector(".doc-body");
+      if (!article) throw new Error("no content");
+      // a link out of the panel opens in its own tab, the panel keeps its place
+      article.querySelectorAll("a[href]").forEach(function (a) {
+        if (a.getAttribute("href").charAt(0) === "#") return;
+        a.target = "_blank";
+        a.rel = "noopener";
+      });
+      var tags = article.querySelector(".doc-tags");
+      if (tags) tags.remove();
+      var parsed = splitChapters(article);
+      reader.cache[rb.slug] = parsed;
+      return parsed;
+    });
+  }
+
+  /* index 0 is the front matter, index n is chapter n */
+  function chapterAt(i) {
+    return i > 0 ? reader.chapters[i - 1] : null;
+  }
+
+  function chapterLabel(i) {
+    if (i === 0) return "Front matter";
+    var c = chapterAt(i);
+    return c ? c.title : "";
+  }
+
+  function renderChapter() {
+    var i = reader.i;
+    var c = chapterAt(i);
+    var html = c ? "<h2>" + esc(c.title) + "</h2>" + c.html : reader.front;
+    var last = reader.chapters.length;
+    var prev = i > 0 ? chapterLabel(i - 1) : "";
+    var next = i < last ? chapterLabel(i + 1) : "";
+
+    $("readerChapter").textContent = chapterLabel(i);
+    $("readerPrev").disabled = i === 0;
+    $("readerNext").disabled = i === last;
+    $("readerBody").innerHTML =
+      '<article class="doc-body panel">' + html + "</article>" +
+      '<nav class="reader-step">' +
+        (prev ? '<button type="button" class="stepbtn" data-step="-1">' +
+                '<span class="dir">Previous</span><span class="what">' + esc(prev) +
+                "</span></button>" : "<span></span>") +
+        (next ? '<button type="button" class="stepbtn next" data-step="1">' +
+                '<span class="dir">Next</span><span class="what">' + esc(next) +
+                "</span></button>" : "<span></span>") +
+      "</nav>";
+    $("detailBody").scrollTop = 0;
+
+    var list = $("readerList");
+    list.querySelectorAll("button").forEach(function (b) {
+      b.classList.toggle("on", Number(b.getAttribute("data-i")) === i);
+    });
+  }
+
+  function goChapter(i, anchor) {
+    reader.i = Math.max(0, Math.min(i, reader.chapters.length));
+    renderChapter();
+    closeChapterList();
+    if (!anchor) return;
+    var body = $("detailBody");
+    var target = body.querySelector('[id="' + (window.CSS && CSS.escape ? CSS.escape(anchor) : anchor) + '"]');
+    if (target) {
+      body.scrollTop = target.getBoundingClientRect().top -
+                       body.getBoundingClientRect().top + body.scrollTop - 10;
+    }
+  }
+
+  function chapterOf(anchor) {
+    for (var i = 0; i < reader.chapters.length; i++) {
+      if (reader.chapters[i].id === anchor) return i + 1;
+      if (reader.chapters[i].html.indexOf('id="' + anchor + '"') !== -1) return i + 1;
+    }
+    return reader.front.indexOf('id="' + anchor + '"') !== -1 ? 0 : -1;
+  }
+
+  function closeChapterList() {
+    var list = $("readerList");
+    if (list) list.hidden = true;
+    var btn = $("readerPick");
+    if (btn) btn.setAttribute("aria-expanded", "false");
+  }
+
+  function showReader(rb) {
+    var body = $("detailBody");
+    reader.rb = rb;
+    reader.at = body.scrollTop;
+    topButtons(rb, "reading");
+    body.querySelector(".detail-body").innerHTML =
+      '<p class="reading-wait">Loading the rulebook.</p>';
+    body.scrollTop = 0;
+
+    fetchRulebook(rb).then(function (parsed) {
+      if (reader.rb !== rb || reader.mode !== "reading") return;
+      reader.front = parsed.front;
+      reader.chapters = parsed.chapters;
+      reader.i = reader.chapters.length ? 1 : 0;
+
+      var items = '<button type="button" data-i="0">Front matter</button>' +
+        reader.chapters.map(function (c, n) {
+          return '<button type="button" data-i="' + (n + 1) + '">' +
+                 esc(c.title) + "</button>";
+        }).join("");
+
+      body.querySelector(".detail-body").innerHTML =
+        '<div class="reader-bar">' +
+          '<button type="button" class="pickbtn" id="readerPick" aria-expanded="false">' +
+            '<span id="readerChapter"></span>' +
+            '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5"/></svg>' +
+          "</button>" +
+          '<div class="reader-step-top">' +
+            '<button type="button" class="pagebtn" id="readerPrev" data-step="-1" aria-label="Previous chapter">' +
+              '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>' +
+            '<button type="button" class="pagebtn" id="readerNext" data-step="1" aria-label="Next chapter">' +
+              '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>' +
+          "</div>" +
+          '<div class="reader-list" id="readerList" hidden>' + items + "</div>" +
+        "</div>" +
+        '<div id="readerBody"></div>';
+
+      $("readerPick").addEventListener("click", function () {
+        var list = $("readerList");
+        list.hidden = !list.hidden;
+        this.setAttribute("aria-expanded", String(!list.hidden));
+      });
+      $("readerList").addEventListener("click", function (e) {
+        var b = e.target.closest("button[data-i]");
+        if (b) goChapter(Number(b.getAttribute("data-i")));
+      });
+      renderChapter();
+    }).catch(function () {
+      if (reader.rb !== rb) return;
+      body.querySelector(".detail-body").innerHTML =
+        '<p class="reading-wait">That rulebook could not be loaded. ' +
+        '<a href="' + esc(rb.page) + '">Open it as a page</a> instead.</p>';
+    });
+  }
+
+  function openDetail(rb) {
+    reader.rb = rb;
+    renderSummary(rb);
     lockPage(true);
     $("detail").showModal();
   }
@@ -595,6 +786,38 @@
     $("detail").addEventListener("click", function (e) {
       if (e.target === $("detail")) $("detail").close();
     });
+    $("openRulebook").addEventListener("click", function (e) {
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+      e.preventDefault();
+      if (reader.rb) showReader(reader.rb);
+    });
+    /* the chapter steps sit both in the bar and under the text */
+    $("detailBody").addEventListener("click", function (e) {
+      if (reader.mode !== "reading") return;
+      var b = e.target.closest("[data-step]");
+      if (b && !b.disabled) goChapter(reader.i + Number(b.getAttribute("data-step")));
+    });
+    $("backToSummary").addEventListener("click", function () {
+      if (!reader.rb) return;
+      renderSummary(reader.rb);
+      $("detailBody").scrollTop = reader.at || 0;
+    });
+    document.addEventListener("click", function (e) {
+      if (reader.mode !== "reading") return;
+      if (!e.target.closest(".reader-bar")) closeChapterList();
+    });
+
+    /* a cross reference inside the text moves the reader, it does not navigate */
+    $("detailBody").addEventListener("click", function (e) {
+      var a = e.target.closest('a[href^="#"]');
+      if (!a) return;
+      e.preventDefault();
+      if (reader.mode !== "reading") return;
+      var id = decodeURIComponent(a.getAttribute("href").slice(1));
+      var n = chapterOf(id);
+      if (n >= 0) goChapter(n, id);
+    });
+
     $("detailBody").addEventListener("click", function (e) {
       var b = e.target.closest(".copy");
       if (!b) return;

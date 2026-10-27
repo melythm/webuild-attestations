@@ -309,6 +309,14 @@ mark { background: var(--accent); color: var(--ink); padding: 0 2px; border-radi
   border-radius: var(--radius); padding: 15px 17px;
 }
 .detail-block > h3:first-child { margin-top: 0; }
+
+/* a block holding one short value does not need a card of its own height */
+.detail-block.lean {
+  display: flex; align-items: baseline; gap: 16px;
+  padding: 11px 17px; flex-wrap: wrap;
+}
+.detail-block.lean h3 { margin: 0; flex: none; }
+.detail-block.lean p { margin: 0; }
 .detail-top {
   position: absolute; top: 18px; right: 24px; z-index: 3;
   display: flex; align-items: center; gap: 8px;
@@ -321,6 +329,18 @@ mark { background: var(--accent); color: var(--ink); padding: 0 2px; border-radi
   transition: background .2s var(--ease);
 }
 .detail .btn.open { background: var(--brand); color: #fff; }
+/* one of these is a button and two are links, so reset what a button brings */
+.detail .ghsmall {
+  display: inline-grid; place-items: center; width: 30px; height: 30px;
+  flex: none; box-sizing: border-box; padding: 0;
+  border: none; border-radius: 50%;
+  -webkit-appearance: none; appearance: none;
+  background: rgba(0,0,0,.07); color: var(--ink);
+  font: inherit; line-height: 0; text-decoration: none; cursor: pointer;
+  transition: background .2s var(--ease);
+}
+.detail .ghsmall svg { display: block; }
+.detail .ghsmall:hover { background: rgba(0,0,0,.14); }
 .detail .close:hover { background: rgba(0,0,0,.14); }
 .detail .btn.open:hover { background: var(--brand-dark); color: #fff; }
 .detail h2 {
@@ -453,10 +473,203 @@ mark { background: var(--accent); color: var(--ink); padding: 0 2px; border-radi
 }
 .foot .gen a:hover { color: var(--brand); text-decoration-color: currentColor; }
 
+/* the panel reads a rulebook a chapter at a time */
+.detail.reading { width: 62vw; max-width: 1040px; }
+.reading-wait { color: var(--muted); padding: 10px 2px; }
+
+.reader-bar {
+  position: sticky; top: 0; z-index: 2; margin: -4px 0 14px;
+  padding: 10px 0; background: var(--canvas);
+  display: flex; align-items: center; gap: 10px;
+}
+.reader-bar::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0;
+  height: 1px; background: var(--line);
+}
+.pickbtn {
+  flex: 1; min-width: 0; display: flex; align-items: center; gap: 8px;
+  font: inherit; font-size: .88rem; font-weight: 600; color: var(--ink);
+  cursor: pointer; text-align: left;
+  border: none; border-radius: var(--r-sm); background: rgba(0,0,0,.05);
+  padding: 9px 12px;
+  transition: background .18s var(--ease);
+}
+.pickbtn:hover { background: rgba(0,0,0,.09); }
+.pickbtn span {
+  flex: 1; min-width: 0; overflow: hidden;
+  text-overflow: ellipsis; white-space: nowrap;
+}
+.pickbtn svg {
+  flex: none; width: 14px; height: 14px; fill: none; stroke: var(--muted);
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+}
+.reader-step-top {
+  display: inline-flex; align-items: center; padding: 3px;
+  border-radius: var(--r-sm); background: rgba(0,0,0,.05);
+}
+.reader-list {
+  position: absolute; top: calc(100% - 2px); left: 0; z-index: 5;
+  width: min(420px, 100%); max-height: 56vh; overflow-y: auto;
+  padding: 6px; background: var(--surface);
+  border: 1px solid var(--line); border-radius: var(--radius);
+  box-shadow: 0 12px 34px rgba(0,0,0,.16);
+  display: flex; flex-direction: column; gap: 1px;
+}
+.reader-list button {
+  font: inherit; font-size: .83rem; text-align: left; cursor: pointer;
+  border: none; background: none; color: var(--ink);
+  padding: 8px 11px; border-radius: 7px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  transition: background .16s var(--ease);
+}
+.reader-list button:hover { background: rgba(0,0,0,.05); }
+.reader-list button.on { background: var(--brand); color: #fff; font-weight: 500; }
+
+.reader-step {
+  display: flex; justify-content: space-between; gap: 12px; margin: 16px 0 4px;
+}
+.stepbtn {
+  font: inherit; cursor: pointer; text-align: left; max-width: 48%;
+  border: 1px solid var(--line); border-radius: var(--radius);
+  background: var(--surface); color: var(--ink); padding: 11px 15px;
+  display: flex; flex-direction: column; gap: 2px;
+  transition: background .18s var(--ease), border-color .18s var(--ease);
+}
+.stepbtn:hover { background: rgba(0,0,0,.03); border-color: rgba(0,0,0,.16); }
+.stepbtn.next { text-align: right; margin-left: auto; }
+.stepbtn .dir {
+  font-size: .66rem; text-transform: uppercase; letter-spacing: .06em;
+  color: var(--muted); font-weight: 600;
+}
+.stepbtn .what {
+  font-size: .85rem; font-weight: 500;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+.doc-body.panel {
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius); box-shadow: none;
+  padding: 22px 24px 28px; font-size: .88rem;
+}
+.doc-body.panel h1 { font-size: 1.36rem; }
+.doc-body.panel h2 { font-size: 1.12rem; scroll-margin-top: 10px; }
+.doc-body.panel > :first-child { margin-top: 0; padding-top: 0; border-top: none; }
+.doc-body.panel h3 { font-size: .98rem; scroll-margin-top: 10px; }
+.doc-body.panel h4, .doc-body.panel h5, .doc-body.panel h6 { scroll-margin-top: 10px; }
+.doc-body.panel .tablewrap table { min-width: 460px; }
+
+/* ------------------------------------------------------- the rulebook page */
+.doc {
+  max-width: 1180px; margin: 0 auto; padding: 26px 22px 12px;
+  display: grid; grid-template-columns: 236px minmax(0, 1fr); gap: 34px;
+  align-items: start;
+}
+.doc-nav { position: sticky; top: 82px; }
+.doc-back {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: .8rem; color: var(--muted); text-decoration: none;
+  padding: 6px 11px; border-radius: var(--r-pill); background: rgba(0,0,0,.05);
+  transition: background .18s var(--ease), color .18s var(--ease);
+}
+.doc-back::before { content: "\2039"; font-size: 1.1rem; line-height: 1; }
+.doc-back:hover { background: rgba(0,0,0,.1); color: var(--ink); }
+.doc-chapters { margin-top: 16px; }
+.doc-chapters > summary {
+  display: none; cursor: pointer; list-style: none;
+  font-size: .72rem; text-transform: uppercase; letter-spacing: .06em;
+  color: var(--muted); font-weight: 600; padding: 9px 11px;
+  border-radius: var(--r-sm); background: rgba(0,0,0,.05);
+}
+.doc-chapters > summary::-webkit-details-marker { display: none; }
+.doc-toc {
+  display: flex; flex-direction: column; gap: 1px;
+  max-height: calc(100vh - 170px); overflow-y: auto; overscroll-behavior: contain;
+}
+.doc-toc a {
+  display: block; font-size: .79rem; line-height: 1.35; color: var(--muted);
+  text-decoration: none; padding: 6px 10px; border-radius: 7px;
+  transition: background .16s var(--ease), color .16s var(--ease);
+}
+.doc-toc a:hover { background: rgba(0,0,0,.05); color: var(--ink); }
+.doc-toc .lvl3 { padding-left: 22px; font-size: .75rem; opacity: .85; }
+
+.doc-body {
+  min-width: 0; background: var(--surface); border-radius: var(--radius);
+  padding: 30px 34px 38px; box-shadow: var(--shadow);
+  font-size: .92rem; line-height: 1.62;
+}
+.doc-tags { display: flex; flex-wrap: wrap; gap: 5px; margin: 0 0 18px; }
+.doc-body h1 {
+  margin: 0 0 18px; font-size: 1.72rem; line-height: 1.2;
+  letter-spacing: -.026em; font-weight: 700;
+}
+.doc-body h2 {
+  margin: 38px 0 12px; font-size: 1.28rem; letter-spacing: -.02em;
+  font-weight: 650; padding-top: 14px; border-top: 1px solid var(--line);
+  scroll-margin-top: 86px;
+}
+.doc-body h3 {
+  margin: 26px 0 8px; font-size: 1.04rem; letter-spacing: -.012em;
+  font-weight: 600; color: var(--ink); text-transform: none;
+  scroll-margin-top: 86px;
+}
+.doc-body h4, .doc-body h5, .doc-body h6 {
+  margin: 20px 0 6px; font-size: .92rem; font-weight: 600; color: var(--ink);
+  scroll-margin-top: 86px;
+}
+.doc-body p, .doc-body li { margin: 9px 0; }
+.doc-body ul, .doc-body ol { padding-left: 22px; }
+.doc-body a { color: var(--brand); text-underline-offset: 2px; }
+.doc-body hr { border: none; border-top: 1px solid var(--line); margin: 26px 0; }
+.doc-body blockquote {
+  margin: 14px 0; padding: 2px 0 2px 16px;
+  border-left: 3px solid var(--line); color: var(--muted);
+}
+.doc-body code {
+  font-family: var(--mono-font); font-size: .88em;
+  background: rgba(0,0,0,.05); padding: 2px 6px; border-radius: 5px;
+  word-break: break-word;
+}
+.doc-body pre {
+  background: rgba(0,0,0,.04); border: 1px solid var(--line);
+  border-radius: var(--r-sm); padding: 14px 16px; overflow-x: auto;
+}
+.doc-body pre code { background: none; padding: 0; font-size: .82rem; }
+.doc-body img { max-width: 100%; height: auto; }
+
+/* the rulebook tables are wide, each one scrolls inside its own box */
+.tablewrap {
+  overflow-x: auto; margin: 14px 0; border: 1px solid var(--line);
+  border-radius: var(--r-sm); background: var(--surface);
+}
+.tablewrap table {
+  border-collapse: collapse; width: 100%; min-width: 580px; font-size: .82rem;
+}
+.tablewrap th, .tablewrap td {
+  text-align: left; vertical-align: top; padding: 9px 12px;
+  border-bottom: 1px solid var(--line);
+}
+.tablewrap tbody tr:last-child td { border-bottom: none; }
+.tablewrap th {
+  font-size: .7rem; text-transform: uppercase; letter-spacing: .05em;
+  color: var(--muted); font-weight: 600; white-space: nowrap;
+  background: var(--canvas); border-bottom: 1px solid rgba(0,0,0,.14);
+}
+.tablewrap tbody tr:nth-child(even) td { background: rgba(0,0,0,.015); }
+
 /* ------------------------------------------------------------ small screens */
 
 @media (max-width: 900px) {
   .detail { width: 88vw; min-width: 0; }
+}
+
+@media (max-width: 860px) {
+  /* the chapter list folds away above the text */
+  .doc { grid-template-columns: 1fr; gap: 14px; padding: 16px 16px 10px; }
+  .doc-nav { position: static; display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+  .doc-chapters { margin-top: 0; width: 100%; }
+  .doc-chapters > summary { display: block; }
+  .doc-toc { max-height: 50vh; margin-top: 6px; }
 }
 
 @media (max-width: 760px) {
@@ -505,6 +718,13 @@ mark { background: var(--accent); color: var(--ink); padding: 0 2px; border-radi
 
   .resultline { margin: 16px 0 14px; }
   .pager { gap: 10px; margin: 24px 0 4px; }
+
+  .detail.reading { width: 100vw; max-width: none; }
+  .doc-body.panel { padding: 16px 14px 22px; }
+  .doc-body { padding: 20px 16px 26px; border-radius: 0; box-shadow: none; }
+  .doc-body h1 { font-size: 1.34rem; }
+  .doc-body h2 { font-size: 1.1rem; margin-top: 28px; }
+  .tablewrap table { min-width: 520px; }
 
   /* the drawer takes the whole screen, with the actions above the title */
   .detail {

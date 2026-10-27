@@ -3,6 +3,7 @@
   "productName": "Attestation Rulebook Explorer",
   "tagline": "Search the attestation rulebooks, their categories and their attributes",
   "siteUrl": "https://www.webuildconsortium.eu/",
+  "publicUrl": "https://webuild-consortium.github.io/webuild-attestation-rulebooks-catalog",
   "repositoryUrl": "https://github.com/webuild-consortium/webuild-attestation-rulebooks-catalog",
   "logo": "assets/logo.svg",
   "logoAlt": "WE BUILD Consortium",

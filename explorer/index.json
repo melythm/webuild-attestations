@@ -20,6 +20,7 @@
    "slug": "rb-a1",
    "title": "Portable Document A1",
    "path": "rulebooks/rb-a1/README.md",
+   "page": "rulebooks/rb-a1.html",
    "categories": [
     "EAA"
    ],
@@ -608,6 +609,7 @@
    "slug": "rb-approved-supplier",
    "title": "Approved Supplier",
    "path": "rulebooks/rb-approved-supplier/README.md",
+   "page": "rulebooks/rb-approved-supplier.html",
    "categories": [],
    "categoryDeclared": "",
    "onTemplate": false,
@@ -701,6 +703,7 @@
    "slug": "rb-authorised-signatories",
    "title": "Authorised Signatories",
    "path": "rulebooks/rb-authorised-signatories/README.md",
+   "page": "rulebooks/rb-authorised-signatories.html",
    "categories": [
     "EAA"
    ],
@@ -1163,6 +1166,7 @@
    "slug": "rb-authorized-service-provider",
    "title": "Authorized Service Provider",
    "path": "rulebooks/rb-authorized-service-provider/README.md",
+   "page": "rulebooks/rb-authorized-service-provider.html",
    "categories": [
     "EAA"
    ],
@@ -1415,6 +1419,7 @@
    "slug": "rb-boarding-pass",
    "title": "Boarding Pass",
    "path": "rulebooks/rb-boarding-pass/README.md",
+   "page": "rulebooks/rb-boarding-pass.html",
    "categories": [
     "EAA"
    ],
@@ -1771,6 +1776,7 @@
    "slug": "rb-company-info",
    "title": "Company Information",
    "path": "rulebooks/rb-company-info/README.md",
+   "page": "rulebooks/rb-company-info.html",
    "categories": [
     "EAA"
    ],
@@ -2223,6 +2229,7 @@
    "slug": "rb-contact-person",
    "title": "Contact Person",
    "path": "rulebooks/rb-contact-person/README.md",
+   "page": "rulebooks/rb-contact-person.html",
    "categories": [
     "EAA"
    ],
@@ -2610,6 +2617,7 @@
    "slug": "rb-control",
    "title": "Control",
    "path": "rulebooks/rb-control/README.md",
+   "page": "rulebooks/rb-control.html",
    "categories": [
     "EAA"
    ],
@@ -3207,6 +3215,7 @@
    "slug": "rb-ds-membership",
    "title": "Membership Credential",
    "path": "rulebooks/rb-ds-membership/README.md",
+   "page": "rulebooks/rb-ds-membership.html",
    "categories": [
     "EAA"
    ],
@@ -3575,6 +3584,7 @@
    "slug": "rb-duns",
    "title": "DUNS",
    "path": "rulebooks/rb-duns/README.md",
+   "page": "rulebooks/rb-duns.html",
    "categories": [
     "EAA"
    ],
@@ -3852,6 +3862,7 @@
    "slug": "rb-e-receipt",
    "title": "eReceipt",
    "path": "rulebooks/rb-e-receipt/README.md",
+   "page": "rulebooks/rb-e-receipt.html",
    "categories": [
     "EAA"
    ],
@@ -4769,6 +4780,7 @@
    "slug": "rb-eInvoice",
    "title": "eInvoice",
    "path": "rulebooks/rb-eInvoice/readme.md",
+   "page": "rulebooks/rb-eInvoice.html",
    "categories": [
     "EAA"
    ],
@@ -5227,6 +5239,7 @@
    "slug": "rb-ebwoid",
    "title": "EBWOID (European Business Wallet, Owner Identification Data)",
    "path": "rulebooks/rb-ebwoid/README.md",
+   "page": "rulebooks/rb-ebwoid.html",
    "categories": [
     "EBWOID"
    ],
@@ -5404,6 +5417,7 @@
    "slug": "rb-ecmr",
    "title": "eCMR",
    "path": "rulebooks/rb-ecmr/README.md",
+   "page": "rulebooks/rb-ecmr.html",
    "categories": [
     "EAA"
    ],
@@ -5573,6 +5587,7 @@
    "slug": "rb-employee",
    "title": "Employee",
    "path": "rulebooks/rb-employee/README.md",
+   "page": "rulebooks/rb-employee.html",
    "categories": [
     "EAA"
    ],
@@ -5849,6 +5864,7 @@
    "slug": "rb-esg",
    "title": "ESG Certificate",
    "path": "rulebooks/rb-esg/README.md",
+   "page": "rulebooks/rb-esg.html",
    "categories": [
     "EAA"
    ],
@@ -6390,6 +6406,7 @@
    "slug": "rb-eu-poa",
    "title": "EU Power of Attorney (EU PoA)",
    "path": "rulebooks/rb-eu-poa/README.md",
+   "page": "rulebooks/rb-eu-poa.html",
    "categories": [
     "QEAA",
     "PuB-EAA",
@@ -6814,6 +6831,7 @@
    "slug": "rb-eucc",
    "title": "EU Company Certificate (EUCC)",
    "path": "rulebooks/rb-eucc/README.md",
+   "page": "rulebooks/rb-eucc.html",
    "categories": [
     "PuB-EAA"
    ],
@@ -7201,6 +7219,7 @@
    "slug": "rb-gln",
    "title": "GLN",
    "path": "rulebooks/rb-gln/README.md",
+   "page": "rulebooks/rb-gln.html",
    "categories": [
     "EAA"
    ],
@@ -7480,6 +7499,7 @@
    "slug": "rb-hello-world",
    "title": "Hello World",
    "path": "rulebooks/rb-hello-world/README.md",
+   "page": "rulebooks/rb-hello-world.html",
    "categories": [
     "EAA"
    ],
@@ -7663,6 +7683,7 @@
    "slug": "rb-iban-ov",
    "title": "IBAN Ownership Verification",
    "path": "rulebooks/rb-iban-ov/README.md",
+   "page": "rulebooks/rb-iban-ov.html",
    "categories": [
     "EAA"
    ],
@@ -8015,6 +8036,7 @@
    "slug": "rb-lei",
    "title": "Legal Entity Identifier",
    "path": "rulebooks/rb-lei/README.md",
+   "page": "rulebooks/rb-lei.html",
    "categories": [
     "EAA"
    ],
@@ -8191,6 +8213,7 @@
    "slug": "rb-loyalty-card",
    "title": "Loyalty Card",
    "path": "rulebooks/rb-loyalty-card/README.md",
+   "page": "rulebooks/rb-loyalty-card.html",
    "categories": [
     "EAA"
    ],
@@ -8592,6 +8615,7 @@
    "slug": "rb-microcredential",
    "title": "Micro-credential",
    "path": "rulebooks/rb-microcredential/README.md",
+   "page": "rulebooks/rb-microcredential.html",
    "categories": [
     "EAA"
    ],
@@ -9043,6 +9067,7 @@
    "slug": "rb-ownership",
    "title": "Ownership",
    "path": "rulebooks/rb-ownership/README.md",
+   "page": "rulebooks/rb-ownership.html",
    "categories": [
     "EAA"
    ],
@@ -9640,6 +9665,7 @@
    "slug": "rb-payment-terms",
    "title": "Payment Terms",
    "path": "rulebooks/rb-payment-terms/README.md",
+   "page": "rulebooks/rb-payment-terms.html",
    "categories": [
     "EAA"
    ],
@@ -10022,6 +10048,7 @@
    "slug": "rb-pid",
    "title": "Personal Identification Data (PID)",
    "path": "rulebooks/rb-pid/README.md",
+   "page": "rulebooks/rb-pid.html",
    "categories": [
     "PID"
    ],
@@ -10547,6 +10574,7 @@
    "slug": "rb-poa-pox",
    "title": "Power of Attorney and Proof of Existence",
    "path": "rulebooks/rb-poa-pox/README.md",
+   "page": "rulebooks/rb-poa-pox.html",
    "categories": [
     "EAA"
    ],
@@ -10966,6 +10994,7 @@
    "slug": "rb-pwn",
    "title": "Proof of Work Notification",
    "path": "rulebooks/rb-pwn/README.md",
+   "page": "rulebooks/rb-pwn.html",
    "categories": [
     "EAA"
    ],
@@ -12097,6 +12126,7 @@
    "slug": "rb-residence",
    "title": "Certificate of Residence (CoR)",
    "path": "rulebooks/rb-residence/README.md",
+   "page": "rulebooks/rb-residence.html",
    "categories": [
     "QEAA",
     "PuB-EAA",
@@ -12473,6 +12503,7 @@
    "slug": "rb-sca-card-dpc",
    "title": "SCA Card DPC",
    "path": "rulebooks/rb-sca-card-dpc/README.md",
+   "page": "rulebooks/rb-sca-card-dpc.html",
    "categories": [
     "EAA"
    ],
@@ -12666,6 +12697,7 @@
    "slug": "rb-sca-iban",
    "title": "SCA IBAN",
    "path": "rulebooks/rb-sca-iban/README.md",
+   "page": "rulebooks/rb-sca-iban.html",
    "categories": [
     "EAA"
    ],
@@ -12960,6 +12992,7 @@
    "slug": "rb-sca-user",
    "title": "SCA User",
    "path": "rulebooks/rb-sca-user/README.md",
+   "page": "rulebooks/rb-sca-user.html",
    "categories": [
     "EAA"
    ],
@@ -13164,6 +13197,7 @@
    "slug": "rb-site",
    "title": "Site",
    "path": "rulebooks/rb-site/README.md",
+   "page": "rulebooks/rb-site.html",
    "categories": [
     "EAA"
    ],
@@ -13546,6 +13580,7 @@
    "slug": "rb-social-security-contribution",
    "title": "Social Security Contribution",
    "path": "rulebooks/rb-social-security-contribution/README.md",
+   "page": "rulebooks/rb-social-security-contribution.html",
    "categories": [
     "EAA"
    ],
@@ -13850,6 +13885,7 @@
    "slug": "rb-student",
    "title": "Student ID",
    "path": "rulebooks/rb-student/README.md",
+   "page": "rulebooks/rb-student.html",
    "categories": [
     "EAA"
    ],
@@ -14181,6 +14217,7 @@
    "slug": "rb-taxid",
    "title": "Tax ID",
    "path": "rulebooks/rb-taxid/README.md",
+   "page": "rulebooks/rb-taxid.html",
    "categories": [
     "EAA"
    ],
@@ -14495,6 +14532,7 @@
    "slug": "rb-ubo",
    "title": "Ultimate Beneficial Owner (UBO)",
    "path": "rulebooks/rb-ubo/README.md",
+   "page": "rulebooks/rb-ubo.html",
    "categories": [
     "QEAA",
     "S-EAA"
@@ -14993,6 +15031,7 @@
    "slug": "rb-vat-id",
    "title": "VAT ID",
    "path": "rulebooks/rb-vat-id/README.md",
+   "page": "rulebooks/rb-vat-id.html",
    "categories": [
     "QEAA",
     "PuB-EAA"
@@ -15476,6 +15515,7 @@
    "slug": "rb-verified-skill",
    "title": "Verified Skill",
    "path": "rulebooks/rb-verified-skill/README.md",
+   "page": "rulebooks/rb-verified-skill.html",
    "categories": [
     "EAA"
    ],

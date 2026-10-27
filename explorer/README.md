@@ -6,11 +6,18 @@ category, by format and by attribute. It has no server and no build dependencies
 ## How it works
 
 `scripts/build_index.py` walks every rulebook, reads the generic template structure,
-and writes `index.json`. The page loads that one file and does the searching in the
-browser.
+and writes three things: `index.json`, one readable page per rulebook under
+`rulebooks/`, and `sitemap.xml` with `robots.txt`. The home page loads the index and
+does the searching in the browser.
 
 Parsing happens once, in CI, rather than on every page load. If a rulebook stops
 parsing, the build reports it rather than the visitor seeing an empty card.
+
+The build needs Python-Markdown:
+
+```sh
+python3 -m pip install markdown
+```
 
 ## Running it locally
 
@@ -23,16 +30,45 @@ python3 -m http.server 8000 --directory explorer
 
 Then open <http://localhost:8000>.
 
+## The rulebook pages
+
+Each rulebook is rendered to its own page, `rulebooks/<slug>.html`, with the chapter
+list beside the text and every table in its own scroll box. The headings are
+slugified the way GitHub does it, so the cross references the authors wrote between
+chapters resolve here too. Where one does not resolve, the build says so rather than
+leaving a reader to find a dead link.
+
+The rulebook text is rendered as written. The house rule against dashes applies to
+this folder's own sources, not to the rulebooks themselves.
+
+A page per rulebook is also what makes a shared link useful: each one carries its own
+title, description and social card metadata, which a page built from a query string
+could not.
+
+## The social card
+
+`assets/og.png` is the 1200 by 630 image that Slack, LinkedIn and the rest show when
+someone shares a link. It is built from `scripts/og-card.html`:
+
+```sh
+python3 -m http.server 8000 --directory explorer &
+"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless \
+  --force-device-scale-factor=1 --window-size=1200,630 \
+  --screenshot=explorer/assets/og.png \
+  http://localhost:8000/scripts/og-card.html
+```
+
 ## Keeping the index current
 
-`index.json` is committed so that GitHub Pages can serve it directly. CI runs
+Everything generated is committed so that GitHub Pages can serve it directly. CI runs
 
 ```sh
 python3 explorer/scripts/build_index.py --check
 ```
 
-which fails if the committed index no longer matches the rulebooks. When a pull
-request changes a rulebook, rebuild the index and commit it in the same change.
+which fails if any committed file no longer matches the rulebooks, naming the file
+and showing the first differences. When a pull request changes a rulebook, rebuild
+and commit in the same change.
 
 ## What the index holds
 
@@ -64,6 +100,7 @@ replace the two SVGs in `assets/`:
 | `footerNote` | Footer line |
 | `theme` | Colours, corner radius and font, injected as CSS custom properties |
 | `categoryColours` | The colour of each category chip |
+| `publicUrl` | The deployed address, used for canonical links, social cards and the sitemap |
 
 No CSS or JavaScript changes are needed. The stylesheet reads only the custom
 properties that `branding.json` sets, with fallbacks if the file is missing.
@@ -71,5 +108,5 @@ properties that `branding.json` sets, with fallbacks if the file is missing.
 ## Deployment
 
 `.github/workflows/explorer.yml` publishes the `explorer/` folder to GitHub Pages on
-every push to `main`, and checks the index on every pull request. Pages needs to be
-enabled once in the repository settings, with the source set to GitHub Actions.
+every push to `main`, and checks the generated files on every pull request. Pages is
+enabled in the repository settings with the source set to GitHub Actions.

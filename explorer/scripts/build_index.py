@@ -24,7 +24,13 @@ from datetime import date, timezone, datetime
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 RULEBOOKS = os.path.join(ROOT, "rulebooks")
 SCHEMAS = os.path.join(ROOT, "data-schemas")
-OUT = os.path.join(ROOT, "explorer", "index.json")
+SITE = os.path.join(ROOT, "explorer")
+OUT = os.path.join(SITE, "index.json")
+PAGES = os.path.join(SITE, "rulebooks")
+BRANDING = os.path.join(SITE, "branding.json")
+
+# filled from branding.json, the rulebook pages colour their category tags
+CATEGORY_COLOURS = {}
 
 # rb-base holds shared chapters cited by other rulebooks, not an attestation.
 NOT_ATTESTATIONS = {"rb-base", "templates"}
@@ -383,9 +389,202 @@ def vct_of(text, schemas):
     return m.group(1) if m else ""
 
 
+# ------------------------------------------------------------- rulebook pages
+
+def need_markdown():
+    try:
+        import markdown
+    except ImportError:
+        print("This build needs Python-Markdown. Install it with:")
+        print("    python3 -m pip install markdown")
+        sys.exit(1)
+    return markdown
+
+
+def esc(s):
+    return (str(s).replace("&", "&amp;").replace("<", "&lt;")
+            .replace(">", "&gt;").replace('"', "&quot;"))
+
+
+def flatten_toc(tokens, out=None):
+    """The heading tree as a flat list, which is what a sidebar needs."""
+    out = [] if out is None else out
+    for t in tokens:
+        out.append({"id": t["id"], "name": t["name"], "level": t["level"]})
+        flatten_toc(t.get("children", []), out)
+    return out
+
+
+def theme_block(brand):
+    """branding.json drives the page, so a rebrand flows into every page."""
+    theme = (brand or {}).get("theme") or {}
+    names = {
+        "brand": "--brand", "brandDark": "--brand-dark", "brandLight": "--brand-light",
+        "accent": "--accent", "accentDark": "--accent-dark", "ink": "--ink",
+        "muted": "--muted", "line": "--line", "surface": "--surface",
+        "canvas": "--canvas", "radius": "--radius", "font": "--font",
+        "headingFont": "--heading-font", "monoFont": "--mono-font",
+        "headerGradient": "--header-gradient",
+    }
+    rules = [f"{css}:{theme[key]}" for key, css in names.items() if theme.get(key)]
+    return ":root{" + ";".join(rules) + "}" if rules else ""
+
+
+def page_description(entry):
+    bits = []
+    if entry["categories"]:
+        bits.append(" and ".join(entry["categories"]))
+    if entry["formats"]:
+        bits.append("issued as " + " or ".join(entry["formats"]))
+    bits.append(f"{entry['attributeCount']} attributes")
+    return f"{entry['title']}. An attestation rulebook, " + ", ".join(bits) + "."
+
+
+def strip_toc(text):
+    """Drop the document's own table of contents.
+
+    The page carries the chapter list beside the text, so the one written into
+    the markdown is a second copy of the same thing. Nothing normative lives in
+    it, only links.
+    """
+    lines = text.split("\n")
+    for i, line in enumerate(lines):
+        if not re.match(r"^## Table of contents\s*$", line, re.I):
+            continue
+        for j in range(i + 1, len(lines)):
+            if re.match(r"^## ", lines[j]):
+                return "\n".join(lines[:i] + lines[j:])
+        return "\n".join(lines[:i])
+    return text
+
+
+def render_page(entry, text, brand, problems):
+    markdown = need_markdown()
+    text = strip_toc(text)
+    md = markdown.Markdown(
+        extensions=["tables", "fenced_code", "toc", "sane_lists", "attr_list"],
+        extension_configs={"toc": {"permalink": False}},
+    )
+    body = md.convert(text)
+
+    # the authors cross reference chapters by anchor. Report the ones that no
+    # longer resolve rather than leaving a reader to find a dead link.
+    ids = set(re.findall(r'id="([^"]+)"', body))
+    dead = sorted(set(re.findall(r'href="#([^"]+)"', body)) - ids)
+    if dead:
+        problems.append(f"{entry['slug']}: {len(dead)} cross reference(s) point at "
+                        f"a heading that is not there, e.g. #{dead[0]}")
+
+    # every table gets its own scroll box, they are far wider than a phone
+    body = body.replace("<table>", '<div class="tablewrap"><table>')
+    body = body.replace("</table>", "</table></div>")
+
+    chapters = [t for t in flatten_toc(md.toc_tokens) if t["level"] in (2, 3)]
+    nav = "".join(
+        f'<a class="lvl{t["level"]}" href="#{esc(t["id"])}">{esc(t["name"])}</a>'
+        for t in chapters
+    )
+
+    site = (brand or {}).get("publicUrl", "").rstrip("/")
+    name = (brand or {}).get("name", "")
+    product = (brand or {}).get("productName", "")
+    repo = (brand or {}).get("repositoryUrl", "")
+    logo = (brand or {}).get("logo", "assets/logo.svg")
+    logo_eu = (brand or {}).get("footerEmblem", "assets/logo-eu.svg")
+    url = f"{site}/rulebooks/{entry['slug']}.html" if site else ""
+    desc = page_description(entry)
+    head_title = f"{entry['title']} rulebook"
+
+    tags = "".join(
+        f'<span class="tag cat" style="background:{CATEGORY_COLOURS.get(c, "#003399")}">'
+        f"{esc(c)}</span>" for c in entry["categories"]
+    ) + "".join(f'<span class="tag fmt">{esc(f)}</span>' for f in entry["formats"])
+
+    return f"""<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{esc(head_title)} | {esc(name)}</title>
+<meta name="description" content="{esc(desc)}">
+{f'<link rel="canonical" href="{esc(url)}">' if url else ''}
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="{esc(name)} {esc(product)}">
+<meta property="og:title" content="{esc(head_title)}">
+<meta property="og:description" content="{esc(desc)}">
+{f'<meta property="og:url" content="{esc(url)}">' if url else ''}
+{f'<meta property="og:image" content="{esc(site)}/assets/og.png">' if site else ''}
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="{esc(name)} {esc(product)}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="{esc(((brand or {}).get('theme') or {}).get('brand', '#003399'))}">
+<link rel="icon" href="../{esc((brand or {}).get('favicon', 'assets/favicon.svg'))}">
+<link rel="stylesheet" href="../assets/style.css">
+<style>{theme_block(brand)}</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="bar">
+    <a class="brand" href="../index.html"><img src="../{esc(logo)}" alt="{esc((brand or {}).get('logoAlt', name))}" height="44"></a>
+    <span class="brand-sep" aria-hidden="true"></span>
+    <span class="brand-product">{esc(product)}</span>
+    <nav class="masthead-links">
+      <a class="ghlink" href="{esc(repo)}/blob/main/{esc(entry['path'])}" target="_blank" rel="noopener" title="View this rulebook on GitHub">
+        <svg viewBox="0 0 16 16" width="19" height="19" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.4 7.4 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+        <span>GitHub</span>
+      </a>
+    </nav>
+  </div>
+</header>
+
+<div class="doc">
+  <aside class="doc-nav">
+    <a class="doc-back" href="../index.html">All rulebooks</a>
+    <details class="doc-chapters" open>
+      <summary>Chapters</summary>
+      <nav class="doc-toc" aria-label="Chapters">{nav}</nav>
+    </details>
+  </aside>
+  <article class="doc-body">
+    <p class="doc-tags">{tags}</p>
+    {body}
+  </article>
+</div>
+
+<footer class="foot">
+  <div class="foot-band">
+    <div class="foot-inner">
+      <a class="foot-logolink" href="{esc((brand or {}).get('siteUrl', '#'))}" target="_blank" rel="noopener"><img class="foot-logo" src="../{esc(logo)}" alt="{esc((brand or {}).get('logoAlt', name))}" height="56"></a>
+      <img class="foot-eu" src="../{esc(logo_eu)}" alt="{esc((brand or {}).get('footerNote', ''))}" height="46">
+    </div>
+  </div>
+  <div class="foot-base">
+    <div class="foot-inner">
+      <span class="copyright">&copy; Copyright {date.today().year} {esc((brand or {}).get('copyright', name))}. All Rights Reserved.</span>
+      <span class="gen">Rendered from <a href="{esc(repo)}/blob/main/{esc(entry['path'])}" target="_blank" rel="noopener">the rulebook</a> in this repository.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* the chapter list is open beside the text, and out of the way on a phone */
+(function () {{
+  var box = document.querySelector(".doc-chapters");
+  if (box && window.matchMedia("(max-width: 860px)").matches) box.open = false;
+}}());
+</script>
+
+</body>
+</html>
+"""
+
+
 def build():
     by_vct, files = schema_index()
     entries, problems = [], []
+    sources = {}
 
     for slug in sorted(os.listdir(RULEBOOKS)):
         d = os.path.join(RULEBOOKS, slug)
@@ -422,6 +621,7 @@ def build():
         if not vct:
             vct = vct_of(text, schemas)
 
+        sources[slug] = text
         attrs = attributes_of(text)
         trace = traceability_of(text)
         fmts = formats_of(text)
@@ -438,6 +638,7 @@ def build():
             "slug": slug,
             "title": title or slug,
             "path": os.path.relpath(path, ROOT),
+            "page": f"rulebooks/{slug}.html",
             "categories": cats,
             "categoryDeclared": raw_cat or "",
             "onTemplate": on_template,
@@ -476,11 +677,12 @@ def build():
         },
         "rulebooks": entries,
     }
-    return index, problems
+    return index, problems, sources
 
 
 SOURCES = ["index.html", "branding.json", "README.md",
-           "assets/app.js", "assets/style.css", "scripts/build_index.py"]
+           "assets/app.js", "assets/style.css",
+           "scripts/build_index.py", "scripts/og-card.html"]
 
 
 def dash_report():
@@ -497,15 +699,50 @@ def dash_report():
     return bad
 
 
+def sitemap(index, brand):
+    site = (brand or {}).get("publicUrl", "").rstrip("/")
+    if not site:
+        return ""
+    day = index["generated"]
+    urls = [f"{site}/"] + [f"{site}/{e['page']}" for e in index["rulebooks"]]
+    rows = "".join(
+        f"  <url><loc>{esc(u)}</loc><lastmod>{day}</lastmod></url>\n" for u in urls
+    )
+    return ('<?xml version="1.0" encoding="UTF-8"?>\n'
+            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+            + rows + "</urlset>\n")
+
+
+def artefacts():
+    """Everything the build writes, keyed by path relative to explorer/."""
+    brand = {}
+    if os.path.exists(BRANDING):
+        brand = json.loads(read(BRANDING))
+    CATEGORY_COLOURS.clear()
+    CATEGORY_COLOURS.update(brand.get("categoryColours") or {})
+
+    index, problems, sources = build()
+    out = {"index.json": json.dumps(index, indent=1, ensure_ascii=False) + "\n"}
+
+    for entry in index["rulebooks"]:
+        out[entry["page"]] = render_page(entry, sources[entry["slug"]], brand, problems)
+
+    site = (brand or {}).get("publicUrl", "").rstrip("/")
+    if site:
+        out["sitemap.xml"] = sitemap(index, brand)
+        out["robots.txt"] = f"User-agent: *\nAllow: /\nSitemap: {site}/sitemap.xml\n"
+
+    return index, problems, out
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--check", action="store_true",
-                    help="fail if the committed index is out of date")
+                    help="fail if the committed files are out of date")
     ap.add_argument("--quiet", action="store_true")
     args = ap.parse_args()
 
-    index, problems = build()
-    payload = json.dumps(index, indent=1, ensure_ascii=False) + "\n"
+    index, problems, out = artefacts()
 
     dashes = dash_report()
     if dashes:
@@ -514,34 +751,57 @@ def main():
             print(f"  {d}")
         return 1
 
+    # the generated date moves on its own, it is not a reason to fail
+    def comparable(text):
+        text = re.sub(r'"generated": "[^"]*"', "", text)
+        return re.sub(r"<lastmod>[^<]*</lastmod>", "", text)
+
     if args.check:
-        if not os.path.exists(OUT):
-            print("explorer/index.json is missing. Run build_index.py.")
+        stale = []
+        for rel, payload in sorted(out.items()):
+            path = os.path.join(SITE, rel)
+            if not os.path.exists(path):
+                stale.append((rel, None, payload))
+                continue
+            if comparable(read(path)) != comparable(payload):
+                stale.append((rel, read(path), payload))
+        if stale:
+            print(f"{len(stale)} generated file(s) out of date. "
+                  "Run build_index.py and commit.")
+            for rel, current, payload in stale[:5]:
+                if current is None:
+                    print(f"  {rel} is missing")
+                    continue
+                print(f"  {rel}")
+                diff = difflib.unified_diff(
+                    comparable(current).split("\n"), comparable(payload).split("\n"),
+                    "committed", "rebuilt", n=1, lineterm="")
+                for n, line in enumerate(diff):
+                    if n > 14:
+                        print("    ...")
+                        break
+                    print("    " + line[:180])
             return 1
-        current = read(OUT)
-        # ignore the generated date when comparing
-        a = re.sub(r'"generated": "[^"]*"', "", current)
-        b = re.sub(r'"generated": "[^"]*"', "", payload)
-        if a != b:
-            print("explorer/index.json is out of date. Run build_index.py and commit.")
-            diff = difflib.unified_diff(a.split("\n"), b.split("\n"),
-                                        "committed", "rebuilt", n=1, lineterm="")
-            for n, line in enumerate(diff):
-                if n > 40:
-                    print("  ...")
-                    break
-                print("  " + line[:200])
-            return 1
-        print(f"index is current: {index['counts']['rulebooks']} rulebooks")
+        print(f"generated files are current: {index['counts']['rulebooks']} rulebooks, "
+              f"{len(out)} files")
         return 0
 
-    os.makedirs(os.path.dirname(OUT), exist_ok=True)
-    with open(OUT, "w", encoding="utf-8") as fh:
-        fh.write(payload)
+    # a rulebook that goes away must not leave its page behind
+    if os.path.isdir(PAGES):
+        keep = {os.path.basename(rel) for rel in out if rel.startswith("rulebooks/")}
+        for name in os.listdir(PAGES):
+            if name.endswith(".html") and name not in keep:
+                os.remove(os.path.join(PAGES, name))
+
+    for rel, payload in out.items():
+        path = os.path.join(SITE, rel)
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        with open(path, "w", encoding="utf-8") as fh:
+            fh.write(payload)
 
     if not args.quiet:
         c = index["counts"]
-        print(f"wrote {os.path.relpath(OUT, ROOT)}")
+        print(f"wrote {len(out)} files under {os.path.relpath(SITE, ROOT)}/")
         print(f"  rulebooks     {c['rulebooks']}")
         print(f"  on template   {c['onTemplate']}")
         print(f"  with schema   {c['withSchema']}")
