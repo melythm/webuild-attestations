@@ -74,11 +74,6 @@ button, input, select { font-family: inherit; letter-spacing: inherit; }
 .masthead-links a:hover { opacity: 1; background: rgba(255,255,255,.2); }
 .ghlink svg { flex: none; }
 
-@media (max-width: 560px) {
-  .ghlink span { display: none; }
-  .masthead-links a { padding: 7px; }
-}
-
 main { max-width: 1180px; margin: 0 auto; padding: 0 22px 20px; }
 
 /* hero */
@@ -399,7 +394,7 @@ mark { background: var(--accent); color: var(--ink); padding: 0 2px; border-radi
   background: rgba(0,0,0,.08); color: var(--muted);
   transition: background .18s var(--ease), color .18s var(--ease);
 }
-.help:hover, .help:focus-visible { background: rgba(0,0,0,.14); color: var(--ink); }
+.help:hover, .help:focus { background: rgba(0,0,0,.14); color: var(--ink); }
 .help::after {
   content: attr(data-tip);
   position: absolute; top: calc(100% + 8px); left: -8px; z-index: 40;
@@ -411,7 +406,7 @@ mark { background: var(--accent); color: var(--ink); padding: 0 2px; border-radi
   opacity: 0; visibility: hidden; transform: translateY(-3px);
   transition: opacity .16s var(--ease), transform .16s var(--ease), visibility .16s;
 }
-.help:hover::after, .help:focus-visible::after {
+.help:hover::after, .help:focus::after {
   opacity: 1; visibility: visible; transform: translateY(0);
 }
 
@@ -437,8 +432,6 @@ mark { background: var(--accent); color: var(--ink); padding: 0 2px; border-radi
   background: rgba(0,0,0,.05); padding: 2px 6px;
   border-radius: 5px; word-break: break-word;
 }
-@media (max-width: 900px) { .detail { width: 88vw; min-width: 0; } }
-
 /* footer */
 .foot { margin-top: 36px; }
 .foot-inner {
@@ -460,12 +453,98 @@ mark { background: var(--accent); color: var(--ink); padding: 0 2px; border-radi
 }
 .foot .gen a:hover { color: var(--brand); text-decoration-color: currentColor; }
 
+/* ------------------------------------------------------------ small screens */
+
+@media (max-width: 900px) {
+  .detail { width: 88vw; min-width: 0; }
+}
+
 @media (max-width: 760px) {
   .foot-eu { margin-left: 0; }
   .foot .gen { margin-left: 0; }
   .results { grid-template-columns: 1fr; }
   .bar { flex-wrap: wrap; }
   .sortwrap { margin-left: 0; }
+}
+
+@media (max-width: 560px) {
+  .ghlink span { display: none; }
+  .masthead-links a { padding: 7px; }
+  /* the masthead stays one row, the product name gives up the space */
+  .bar { gap: 10px; padding: 10px 16px; flex-wrap: nowrap; }
+  .brand, .masthead-links { flex: none; }
+  .brand-sep { display: none; }
+  .brand img { height: 32px; width: auto; }
+  .brand-product {
+    font-size: .82rem; min-width: 0;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+}
+
+/* phones */
+@media (max-width: 640px) {
+  main { padding: 0 16px 18px; }
+  .hero-inner { padding: 26px 16px 24px; }
+  .foot-inner { padding: 0 16px; }
+
+  #q { padding: 14px 46px 14px 44px; }
+  .searchicon { left: 15px; }
+  .hero-hint { margin-top: 12px; gap: 6px 12px; }
+
+  .controls { padding: 20px 0 2px; }
+  .filters { gap: 16px; }
+  .filtersep { display: none; }
+
+  /* a tooltip anchored to its icon would run off a narrow screen, so on a
+     phone it sits along the bottom edge instead */
+  .help::after {
+    position: fixed; left: 14px; right: 14px; bottom: 14px;
+    top: auto; width: auto; transform: none; font-size: .78rem;
+  }
+  .help:hover::after, .help:focus::after { transform: none; }
+
+  .resultline { margin: 16px 0 14px; }
+  .pager { gap: 10px; margin: 24px 0 4px; }
+
+  /* the drawer takes the whole screen, with the actions above the title */
+  .detail {
+    width: 100vw; max-width: none; min-width: 0;
+    height: 100dvh; max-height: 100dvh;
+    border-left: none; box-shadow: none;
+  }
+  #detailBody { height: 100dvh; padding-bottom: 28px; }
+  .detail-top { top: 12px; right: 14px; }
+  .detail-head { padding: 56px 16px 16px; }
+  .detail h2 { margin-right: 0; font-size: 1.2rem; }
+  .detail-body { padding: 14px 14px 0; }
+  .detail-block { padding: 13px 14px; }
+  .blockhead { flex-wrap: wrap; gap: 8px; }
+  .segbtn { white-space: nowrap; }
+
+  /* four columns do not fit a phone, so each attribute becomes a block */
+  .detail table, .detail tbody, .detail tr, .detail td { display: block; }
+  .detail thead { display: none; }
+  /* these have to match the column width selectors above, or they lose */
+  .detail .plain th:first-child, .detail .plain td:first-child,
+  .detail .plain th:nth-child(2), .detail .plain td:nth-child(2),
+  .detail .byformat th:first-child, .detail .byformat td:first-child,
+  .detail .byformat th:nth-child(2), .detail .byformat td:nth-child(2),
+  .detail .byformat th:nth-child(3), .detail .byformat td:nth-child(3) { width: auto; }
+  .detail tbody tr { padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .detail tbody tr:last-child { border-bottom: none; }
+  .detail tbody tr:nth-child(even) td { background: none; }
+  .detail td { border: none; padding: 0; }
+  .detail td:empty { display: none; }
+  .detail tbody td:first-child { margin-bottom: 6px; }
+  .detail tbody td:first-child .copy { max-width: 100%; }
+  .detail .plain td:nth-child(2),
+  .detail .byformat td:nth-child(2), .detail .byformat td:nth-child(3) {
+    display: inline-block; vertical-align: middle; margin: 0 12px 6px 0;
+    font-size: .72rem; color: var(--muted);
+  }
+  .detail tbody td:last-child { font-size: .83rem; }
+  .detail .sub { display: inline; margin-left: 8px; }
+  .copy .ico { opacity: .55; }
 }
 
 @media (prefers-reduced-motion: reduce) {

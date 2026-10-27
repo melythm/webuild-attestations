@@ -7,7 +7,7 @@
   "QEAA",
   "PuB-EAA",
   "S-EAA",
-  "non-qualified EAA"
+  "EAA"
  ],
  "counts": {
   "rulebooks": 40,
@@ -21,7 +21,7 @@
    "title": "Portable Document A1",
    "path": "rulebooks/rb-a1/README.md",
    "categories": [
-    "non-qualified EAA"
+    "EAA"
    ],
    "categoryDeclared": "non-qualified EAA",
    "onTemplate": true,
@@ -702,7 +702,7 @@
    "title": "Authorised Signatories",
    "path": "rulebooks/rb-authorised-signatories/README.md",
    "categories": [
-    "non-qualified EAA"
+    "EAA"
    ],
    "categoryDeclared": "non-qualified EAA",
    "onTemplate": true,
@@ -1164,7 +1164,7 @@
    "title": "Authorized Service Provider",
    "path": "rulebooks/rb-authorized-service-provider/README.md",
    "categories": [
-    "non-qualified EAA"
+    "EAA"
    ],
    "categoryDeclared": "non-qualified EAA",
    "onTemplate": true,
@@ -1416,7 +1416,7 @@
    "title": "Boarding Pass",
    "path": "rulebooks/rb-boarding-pass/README.md",
    "categories": [
-    "non-qualified EAA"
+    "EAA"
    ],
    "categoryDeclared": "non-qualified EAA",
    "onTemplate": true,
@@ -1772,7 +1772,7 @@
    "title": "Company Information",
    "path": "rulebooks/rb-company-info/README.md",
    "categories": [
-    "non-qualified EAA"
+    "EAA"
    ],
    "categoryDeclared": "non-qualified EAA",
    "onTemplate": true,
@@ -2224,7 +2224,7 @@
    "title": "Contact Person",
    "path": "rulebooks/rb-contact-person/README.md",
    "categories": [
-    "non-qualified EAA"
+    "EAA"
    ],
    "categoryDeclared": "non-qualified EAA",
    "onTemplate": true,
@@ -2611,7 +2611,7 @@
    "title": "Control",
    "path": "rulebooks/rb-control/README.md",
    "categories": [
-    "non-qualified EAA"
+    "EAA"
    ],
    "categoryDeclared": "non-qualified EAA",
    "onTemplate": true,
@@ -3208,7 +3208,7 @@
    "title": "Membership Credential",
    "path": "rulebooks/rb-ds-membership/README.md",
    "categories": [
-    "non-qualified EAA"
+    "EAA"
    ],
    "categoryDeclared": "non-qualified EAA",
    "onTemplate": true,
@@ -3576,7 +3576,7 @@
    "title": "DUNS",
    "path": "rulebooks/rb-duns/README.md",
    "categories": [
-    "non-qualified EAA"
+    "EAA"
    ],
    "categoryDeclared": "non-qualified EAA",
    "onTemplate": true,
@@ -3853,7 +3853,7 @@
    "title": "eReceipt",
    "path": "rulebooks/rb-e-receipt/README.md",
    "categories": [
-    "non-qualified EAA"
+    "EAA"
    ],
    "categoryDeclared": "non-qualified EAA",
    "onTemplate": true,
@@ -4770,7 +4770,7 @@
    "title": "eInvoice",
    "path": "rulebooks/rb-eInvoice/readme.md",
    "categories": [
-    "non-qualified EAA"
+    "EAA"
    ],
    "categoryDeclared": "non-qualified EAA",
    "onTemplate": true,
@@ -5405,7 +5405,7 @@
    "title": "eCMR",
    "path": "rulebooks/rb-ecmr/README.md",
    "categories": [
-    "non-qualified EAA"
+    "EAA"
    ],
    "categoryDeclared": "non-qualified EAA",
    "onTemplate": true,
@@ -5574,7 +5574,7 @@
    "title": "Employee",
    "path": "rulebooks/rb-employee/README.md",
    "categories": [
-    "non-qualified EAA"
+    "EAA"
    ],
    "categoryDeclared": "non-qualified EAA",
    "onTemplate": true,
@@ -5850,7 +5850,7 @@
    "title": "ESG Certificate",
    "path": "rulebooks/rb-esg/README.md",
    "categories": [
-    "non-qualified EAA"
+    "EAA"
    ],
    "categoryDeclared": "non-qualified EAA",
    "onTemplate": true,
@@ -6393,7 +6393,7 @@
    "categories": [
     "QEAA",
     "PuB-EAA",
-    "non-qualified EAA"
+    "EAA"
    ],
    "categoryDeclared": "QEAA, PuB-EAA or non-qualified EAA, as stated in `attestation_legal_category`",
    "onTemplate": true,
@@ -7202,7 +7202,7 @@
    "title": "GLN",
    "path": "rulebooks/rb-gln/README.md",
    "categories": [
-    "non-qualified EAA"
+    "EAA"
    ],
    "categoryDeclared": "non-qualified EAA",
    "onTemplate": true,
@@ -7481,7 +7481,7 @@
    "title": "Hello World",
    "path": "rulebooks/rb-hello-world/README.md",
    "categories": [
-    "non-qualified EAA"
+    "EAA"
    ],
    "categoryDeclared": "non-qualified EAA",
    "onTemplate": true,
@@ -7664,7 +7664,7 @@
    "title": "IBAN Ownership Verification",
    "path": "rulebooks/rb-iban-ov/README.md",
    "categories": [
-    "non-qualified EAA"
+    "EAA"
    ],
    "categoryDeclared": "non-qualified EAA",
    "onTemplate": true,
@@ -8016,7 +8016,7 @@
    "title": "Legal Entity Identifier",
    "path": "rulebooks/rb-lei/README.md",
    "categories": [
-    "non-qualified EAA"
+    "EAA"
    ],
    "categoryDeclared": "non-qualified EAA",
    "onTemplate": true,
@@ -8192,7 +8192,7 @@
    "title": "Loyalty Card",
    "path": "rulebooks/rb-loyalty-card/README.md",
    "categories": [
-    "non-qualified EAA"
+    "EAA"
    ],
    "categoryDeclared": "non-qualified EAA",
    "onTemplate": true,
@@ -8593,7 +8593,7 @@
    "title": "Micro-credential",
    "path": "rulebooks/rb-microcredential/README.md",
    "categories": [
-    "non-qualified EAA"
+    "EAA"
    ],
    "categoryDeclared": "non-qualified EAA",
    "onTemplate": true,
@@ -9044,7 +9044,7 @@
    "title": "Ownership",
    "path": "rulebooks/rb-ownership/README.md",
    "categories": [
-    "non-qualified EAA"
+    "EAA"
    ],
    "categoryDeclared": "non-qualified EAA",
    "onTemplate": true,
@@ -9641,7 +9641,7 @@
    "title": "Payment Terms",
    "path": "rulebooks/rb-payment-terms/README.md",
    "categories": [
-    "non-qualified EAA"
+    "EAA"
    ],
    "categoryDeclared": "non-qualified EAA",
    "onTemplate": true,
@@ -10548,7 +10548,7 @@
    "title": "Power of Attorney and Proof of Existence",
    "path": "rulebooks/rb-poa-pox/README.md",
    "categories": [
-    "non-qualified EAA"
+    "EAA"
    ],
    "categoryDeclared": "non-qualified EAA",
    "onTemplate": true,
@@ -10967,7 +10967,7 @@
    "title": "Proof of Work Notification",
    "path": "rulebooks/rb-pwn/README.md",
    "categories": [
-    "non-qualified EAA"
+    "EAA"
    ],
    "categoryDeclared": "non-qualified EAA",
    "onTemplate": true,
@@ -12100,7 +12100,7 @@
    "categories": [
     "QEAA",
     "PuB-EAA",
-    "non-qualified EAA"
+    "EAA"
    ],
    "categoryDeclared": "QEAA, PuB-EAA or non-qualified EAA, as stated in `attestation_legal_category`",
    "onTemplate": true,
@@ -12474,7 +12474,7 @@
    "title": "SCA Card DPC",
    "path": "rulebooks/rb-sca-card-dpc/README.md",
    "categories": [
-    "non-qualified EAA"
+    "EAA"
    ],
    "categoryDeclared": "non-qualified EAA",
    "onTemplate": true,
@@ -12667,7 +12667,7 @@
    "title": "SCA IBAN",
    "path": "rulebooks/rb-sca-iban/README.md",
    "categories": [
-    "non-qualified EAA"
+    "EAA"
    ],
    "categoryDeclared": "non-qualified EAA",
    "onTemplate": true,
@@ -12961,7 +12961,7 @@
    "title": "SCA User",
    "path": "rulebooks/rb-sca-user/README.md",
    "categories": [
-    "non-qualified EAA"
+    "EAA"
    ],
    "categoryDeclared": "non-qualified EAA",
    "onTemplate": true,
@@ -13165,7 +13165,7 @@
    "title": "Site",
    "path": "rulebooks/rb-site/README.md",
    "categories": [
-    "non-qualified EAA"
+    "EAA"
    ],
    "categoryDeclared": "non-qualified EAA",
    "onTemplate": true,
@@ -13547,7 +13547,7 @@
    "title": "Social Security Contribution",
    "path": "rulebooks/rb-social-security-contribution/README.md",
    "categories": [
-    "non-qualified EAA"
+    "EAA"
    ],
    "categoryDeclared": "non-qualified EAA",
    "onTemplate": true,
@@ -13851,7 +13851,7 @@
    "title": "Student ID",
    "path": "rulebooks/rb-student/README.md",
    "categories": [
-    "non-qualified EAA"
+    "EAA"
    ],
    "categoryDeclared": "non-qualified EAA",
    "onTemplate": true,
@@ -14182,7 +14182,7 @@
    "title": "Tax ID",
    "path": "rulebooks/rb-taxid/README.md",
    "categories": [
-    "non-qualified EAA"
+    "EAA"
    ],
    "categoryDeclared": "non-qualified EAA",
    "onTemplate": true,
@@ -15477,7 +15477,7 @@
    "title": "Verified Skill",
    "path": "rulebooks/rb-verified-skill/README.md",
    "categories": [
-    "non-qualified EAA"
+    "EAA"
    ],
    "categoryDeclared": "non-qualified EAA",
    "onTemplate": true,

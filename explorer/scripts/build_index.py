@@ -37,7 +37,9 @@ CATEGORIES = [
     ("QEAA", r"\bQEAA\b"),
     ("PuB-EAA", r"\bPuB-EAA\b"),
     ("S-EAA", r"\bS-EAA\b|self-issued EAA|self-attested"),
-    ("non-qualified EAA", r"non-qualified EAA"),
+    # the ARF calls this one simply an EAA. The rulebooks still write
+    # "non-qualified EAA", so the text matched and the label differ.
+    ("EAA", r"non-qualified EAA"),
 ]
 
 FORMAT_ROWS = {
