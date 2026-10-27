@@ -391,12 +391,23 @@ def vct_of(text, schemas):
 
 # ------------------------------------------------------------- rulebook pages
 
+# The rendered pages are committed, so the renderer has to be the same one
+# everywhere. Different Python-Markdown releases differ on, among other things,
+# how they treat a long run of asterisks inside a table cell.
+MARKDOWN_VERSION = "3.11.2"
+
+
 def need_markdown():
     try:
         import markdown
     except ImportError:
-        print("This build needs Python-Markdown. Install it with:")
-        print("    python3 -m pip install markdown")
+        markdown = None
+    if markdown is None or markdown.__version__ != MARKDOWN_VERSION:
+        have = markdown.__version__ if markdown else "nothing"
+        print(f"This build renders the rulebook pages with Python-Markdown "
+              f"{MARKDOWN_VERSION} and found {have}.")
+        print(f"    python3 -m pip install markdown=={MARKDOWN_VERSION}")
+        print("It needs Python 3.11 or newer.")
         sys.exit(1)
     return markdown
 

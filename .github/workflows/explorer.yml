@@ -24,7 +24,7 @@ jobs:
         with:
           python-version: "3.11"
       - name: Install the build dependencies
-        run: python3 -m pip install --quiet markdown
+        run: python3 -m pip install --quiet "markdown==3.11.2"
       - name: Verify the generated files match the rulebooks
         run: python3 explorer/scripts/build_index.py --check
 

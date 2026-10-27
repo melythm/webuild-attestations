@@ -304,11 +304,11 @@
       picker = '<span class="fmtnote">' + esc(fmts[0]) + "</span>";
     }
 
+    $("detailHead").innerHTML =
+      "<h2>" + esc(rb.title) + "</h2>" +
+      '<div class="slug">' + esc(rb.slug) + "</div>";
+
     body.innerHTML =
-      '<header class="detail-head">' +
-        "<h2>" + esc(rb.title) + "</h2>" +
-        '<div class="slug">' + esc(rb.slug) + "</div>" +
-      "</header>" +
       '<div class="detail-body">' +
         (rb.categoryDeclared
           ? block("Category as declared", "<p>" + esc(rb.categoryDeclared) + "</p>",
@@ -349,6 +349,7 @@
     }
 
     topButtons(rb, "summary");
+    if ($("readerBar")) { $("readerBar").hidden = true; }
     body.scrollTop = 0;
   }
 
@@ -505,21 +506,20 @@
                  esc(c.title) + "</button>";
         }).join("");
 
-      body.querySelector(".detail-body").innerHTML =
-        '<div class="reader-bar">' +
-          '<button type="button" class="pickbtn" id="readerPick" aria-expanded="false">' +
-            '<span id="readerChapter"></span>' +
-            '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5"/></svg>' +
-          "</button>" +
-          '<div class="reader-step-top">' +
-            '<button type="button" class="pagebtn" id="readerPrev" data-step="-1" aria-label="Previous chapter">' +
-              '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>' +
-            '<button type="button" class="pagebtn" id="readerNext" data-step="1" aria-label="Next chapter">' +
-              '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>' +
-          "</div>" +
-          '<div class="reader-list" id="readerList" hidden>' + items + "</div>" +
+      $("readerBar").innerHTML =
+        '<button type="button" class="pickbtn" id="readerPick" aria-expanded="false">' +
+          '<span id="readerChapter"></span>' +
+          '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5"/></svg>' +
+        "</button>" +
+        '<div class="reader-step-top">' +
+          '<button type="button" class="pagebtn" id="readerPrev" data-step="-1" aria-label="Previous chapter">' +
+            '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>' +
+          '<button type="button" class="pagebtn" id="readerNext" data-step="1" aria-label="Next chapter">' +
+            '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>' +
         "</div>" +
-        '<div id="readerBody"></div>';
+        '<div class="reader-list" id="readerList" hidden>' + items + "</div>";
+      $("readerBar").hidden = false;
+      body.querySelector(".detail-body").innerHTML = '<div id="readerBody"></div>';
 
       $("readerPick").addEventListener("click", function () {
         var list = $("readerList");
@@ -792,7 +792,7 @@
       if (reader.rb) showReader(reader.rb);
     });
     /* the chapter steps sit both in the bar and under the text */
-    $("detailBody").addEventListener("click", function (e) {
+    $("detail").addEventListener("click", function (e) {
       if (reader.mode !== "reading") return;
       var b = e.target.closest("[data-step]");
       if (b && !b.disabled) goChapter(reader.i + Number(b.getAttribute("data-step")));

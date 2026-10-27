@@ -286,6 +286,7 @@ mark { background: var(--accent); color: var(--ink); padding: 0 2px; border-radi
 /* detail drawer */
 .detail {
   border: none; padding: 0; margin: 0 0 0 auto;
+  display: flex; flex-direction: column;
   width: 44vw; min-width: 440px; max-width: 760px; height: 100vh; max-height: 100vh;
   background: var(--canvas); color: var(--ink);
   border-left: 1px solid rgba(0,0,0,.14);
@@ -294,14 +295,15 @@ mark { background: var(--accent); color: var(--ink); padding: 0 2px; border-radi
 }
 .detail::backdrop { background: rgba(0,0,0,.34); backdrop-filter: blur(4px); }
 
+/* the head stays put, only the body below it scrolls */
 #detailBody {
-  padding: 0 0 40px; height: 100vh;
+  flex: 1 1 auto; min-height: 0; padding: 0 0 40px;
   overflow-y: auto; overflow-x: hidden; overscroll-behavior: none;
 }
 
 .detail-head {
-  background: var(--surface); border-bottom: 1px solid var(--line);
-  padding: 24px 30px 20px; position: sticky; top: 0; z-index: 1;
+  flex: none; background: var(--surface); border-bottom: 1px solid var(--line);
+  padding: 24px 30px 20px; z-index: 1;
 }
 .detail-body { padding: 20px 30px 0; display: flex; flex-direction: column; gap: 14px; }
 .detail-block {
@@ -478,14 +480,15 @@ mark { background: var(--accent); color: var(--ink); padding: 0 2px; border-radi
 .reading-wait { color: var(--muted); padding: 10px 2px; }
 
 .reader-bar {
-  position: sticky; top: 0; z-index: 2; margin: -4px 0 14px;
-  padding: 10px 0; background: var(--canvas);
+  position: relative; z-index: 2; flex: none;
+  padding: 10px 30px; background: var(--canvas);
   display: flex; align-items: center; gap: 10px;
 }
 .reader-bar::after {
   content: ""; position: absolute; left: 0; right: 0; bottom: 0;
   height: 1px; background: var(--line);
 }
+.reader-bar[hidden] { display: none !important; }
 .pickbtn {
   flex: 1; min-width: 0; display: flex; align-items: center; gap: 8px;
   font: inherit; font-size: .88rem; font-weight: 600; color: var(--ink);
@@ -508,7 +511,7 @@ mark { background: var(--accent); color: var(--ink); padding: 0 2px; border-radi
   border-radius: var(--r-sm); background: rgba(0,0,0,.05);
 }
 .reader-list {
-  position: absolute; top: calc(100% - 2px); left: 0; z-index: 5;
+  position: absolute; top: calc(100% - 2px); left: 30px; z-index: 5;
   width: min(420px, 100%); max-height: 56vh; overflow-y: auto;
   padding: 6px; background: var(--surface);
   border: 1px solid var(--line); border-radius: var(--radius);
@@ -720,6 +723,8 @@ mark { background: var(--accent); color: var(--ink); padding: 0 2px; border-radi
   .pager { gap: 10px; margin: 24px 0 4px; }
 
   .detail.reading { width: 100vw; max-width: none; }
+  .reader-bar { padding: 9px 14px; }
+  .reader-list { left: 14px; width: calc(100% - 28px); }
   .doc-body.panel { padding: 16px 14px 22px; }
   .doc-body { padding: 20px 16px 26px; border-radius: 0; box-shadow: none; }
   .doc-body h1 { font-size: 1.34rem; }
@@ -732,7 +737,7 @@ mark { background: var(--accent); color: var(--ink); padding: 0 2px; border-radi
     height: 100dvh; max-height: 100dvh;
     border-left: none; box-shadow: none;
   }
-  #detailBody { height: 100dvh; padding-bottom: 28px; }
+  #detailBody { padding-bottom: 28px; }
   .detail-top { top: 12px; right: 14px; }
   .detail-head { padding: 56px 16px 16px; }
   .detail h2 { margin-right: 0; font-size: 1.2rem; }

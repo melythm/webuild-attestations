@@ -13,10 +13,12 @@ does the searching in the browser.
 Parsing happens once, in CI, rather than on every page load. If a rulebook stops
 parsing, the build reports it rather than the visitor seeing an empty card.
 
-The build needs Python-Markdown:
+The build needs Python 3.11 or newer and a pinned Python-Markdown, because the
+rendered pages are committed and different releases render the same markdown
+differently:
 
 ```sh
-python3 -m pip install markdown
+python3 -m pip install markdown==3.11.2
 ```
 
 ## Running it locally
