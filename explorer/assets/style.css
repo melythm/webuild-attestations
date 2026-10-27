@@ -29,7 +29,10 @@
 /* the hidden attribute must win over any display rule below */
 [hidden] { display: none !important; }
 
+/* the footer sits at the bottom of the window even when a page is short */
 body {
+  min-height: 100vh; min-height: 100dvh;
+  display: flex; flex-direction: column;
   margin: 0;
   font-family: var(--font);
   color: var(--ink);
@@ -49,6 +52,7 @@ button, input, select { font-family: inherit; letter-spacing: inherit; }
 
 /* masthead, sticky like a system toolbar */
 .masthead {
+  flex: none;
   background: var(--header-gradient);
   color: #fff;
   position: sticky; top: 0; z-index: 30;
@@ -74,10 +78,10 @@ button, input, select { font-family: inherit; letter-spacing: inherit; }
 .masthead-links a:hover { opacity: 1; background: rgba(255,255,255,.2); }
 .ghlink svg { flex: none; }
 
-main { max-width: 1180px; margin: 0 auto; padding: 0 22px 20px; }
+main { flex: 1 0 auto; width: 100%; max-width: 1180px; margin: 0 auto; padding: 0 22px 20px; }
 
 /* hero */
-.hero { background: var(--surface); border-bottom: 1px solid var(--line); }
+.hero { flex: none; background: var(--surface); border-bottom: 1px solid var(--line); }
 .hero-inner { max-width: 1180px; margin: 0 auto; padding: 40px 22px 32px; }
 .hero-hint {
   margin: 14px 2px 0; font-size: .85rem; color: var(--muted);
@@ -457,7 +461,7 @@ mark { background: var(--accent); color: var(--ink); padding: 0 2px; border-radi
   border-radius: 5px; word-break: break-word;
 }
 /* footer */
-.foot { margin-top: 36px; }
+.foot { flex: none; margin-top: 36px; }
 .foot-inner {
   max-width: 1180px; margin: 0 auto; padding: 0 22px;
   display: flex; align-items: center; gap: 24px; flex-wrap: wrap;
@@ -565,6 +569,7 @@ mark { background: var(--accent); color: var(--ink); padding: 0 2px; border-radi
 
 /* ------------------------------------------------------- the rulebook page */
 .doc {
+  flex: 1 0 auto; width: 100%;
   max-width: 1180px; margin: 0 auto; padding: 26px 22px 12px;
   display: grid; grid-template-columns: 236px minmax(0, 1fr); gap: 34px;
   align-items: start;
