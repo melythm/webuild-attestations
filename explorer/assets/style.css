@@ -286,13 +286,15 @@ mark { background: var(--accent); color: var(--ink); padding: 0 2px; border-radi
 /* detail drawer */
 .detail {
   border: none; padding: 0; margin: 0 0 0 auto;
-  display: flex; flex-direction: column;
   width: 44vw; min-width: 440px; max-width: 760px; height: 100vh; max-height: 100vh;
   background: var(--canvas); color: var(--ink);
   border-left: 1px solid rgba(0,0,0,.14);
   box-shadow: -24px 0 70px rgba(0,0,0,.22);
   overflow: hidden; overscroll-behavior: none;
 }
+/* the layout only applies while the dialog is open, otherwise it would
+   override the display:none a closed dialog relies on */
+.detail[open] { display: flex; flex-direction: column; }
 .detail::backdrop { background: rgba(0,0,0,.34); backdrop-filter: blur(4px); }
 
 /* the head stays put, only the body below it scrolls */
