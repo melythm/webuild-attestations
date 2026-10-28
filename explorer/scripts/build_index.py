@@ -524,11 +524,13 @@ def render_page(entry, text, brand, problems):
 <meta property="og:title" content="{esc(head_title)}">
 <meta property="og:description" content="{esc(desc)}">
 {f'<meta property="og:url" content="{esc(url)}">' if url else ''}
-{f'<meta property="og:image" content="{esc(site)}/assets/og.png">' if site else ''}
+{f'<meta property="og:image" content="{esc(site)}/assets/og.png?v=2">' if site else ''}
+<meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="{esc(name)} {esc(product)}">
 <meta name="twitter:card" content="summary_large_image">
+{f'<meta name="twitter:image" content="{esc(site)}/assets/og.png?v=2">' if site else ''}
 <meta name="theme-color" content="{esc(((brand or {}).get('theme') or {}).get('brand', '#003399'))}">
 <link rel="icon" href="../{esc((brand or {}).get('favicon', 'assets/favicon.svg'))}">
 <link rel="stylesheet" href="../assets/style.css">
